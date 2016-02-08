@@ -1,0 +1,2668 @@
+   0  $accept : %entry% $end
+
+   1  start : expr EOF
+
+   2  simple_expr : UNIT
+   3              | INT
+   4              | WHAT
+   5              | IDENT
+   6              | TRUE
+   7              | FALSE
+   8              | LPAREN exprlist RPAREN
+   9              | LPAREN expr COMMA expr RPAREN
+  10              | NOT simple_expr
+  11              | BANG simple_expr
+  12              | REF simple_expr
+  13              | simple_expr simple_expr
+
+  14  expr : simple_expr
+  15       | SUB expr
+  16       | expr ADD expr
+  17       | expr SUB expr
+  18       | expr MUL expr
+  19       | expr DIV expr
+  20       | expr MOD expr
+  21       | expr LT expr
+  22       | expr EQUAL expr
+  23       | expr ANDOP expr
+  24       | expr OROP expr
+  25       | expr ASSIGN expr
+  26       | WHILE expr DO simple_expr
+  27       | IF expr THEN expr ELSE expr
+  28       | FST expr
+  29       | SND expr
+  30       | INL texpr expr
+  31       | INR texpr expr
+  32       | FUN LPAREN args_fun RPAREN ARROW expr
+  33       | CASE expr OF INL LPAREN args_fun RPAREN ARROW expr BAR INR LPAREN args_fun RPAREN ARROW expr
+  34       | LET decllist IN expr END
+
+  35  arg : IDENT COLON texpr
+
+  36  args_let : arg
+  37           | LPAREN args_let COMMA args_let RPAREN
+
+  38  args_fun : arg
+  39           | args_let COMMA args_let
+
+  40  decl : args_let EQUAL expr
+  41       | IDENT LPAREN args_fun RPAREN COLON texpr EQUAL expr
+
+  42  decllist : decl
+  43           | decl SEMICOLON decllist
+
+  44  exprlist : expr
+  45           | expr SEMICOLON exprlist
+
+  46  texpr : BOOL
+  47        | INTTYPE
+  48        | UNITTYPE
+  49        | texpr ARROW texpr
+  50        | texpr MUL texpr
+  51        | texpr ADD texpr
+  52        | texpr REF
+  53        | LPAREN texpr RPAREN
+
+  54  %entry% : '\001' start
+
+state 0
+	$accept : . %entry% $end  (0)
+
+	'\001'  shift 1
+	.  error
+
+	%entry%  goto 2
+
+
+state 1
+	%entry% : '\001' . start  (54)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	start  goto 23
+	simple_expr  goto 24
+	expr  goto 25
+
+
+state 2
+	$accept : %entry% . $end  (0)
+
+	$end  accept
+
+
+state 3
+	simple_expr : INT .  (3)
+
+	.  reduce 3
+
+
+state 4
+	simple_expr : IDENT .  (5)
+
+	.  reduce 5
+
+
+state 5
+	simple_expr : LPAREN . exprlist RPAREN  (8)
+	simple_expr : LPAREN . expr COMMA expr RPAREN  (9)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 26
+	exprlist  goto 27
+
+
+state 6
+	expr : SUB . expr  (15)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 28
+
+
+state 7
+	simple_expr : NOT . simple_expr  (10)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	REF  shift 20
+	BANG  shift 21
+	.  error
+
+	simple_expr  goto 29
+
+
+state 8
+	simple_expr : WHAT .  (4)
+
+	.  reduce 4
+
+
+state 9
+	simple_expr : UNIT .  (2)
+
+	.  reduce 2
+
+
+state 10
+	simple_expr : TRUE .  (6)
+
+	.  reduce 6
+
+
+state 11
+	simple_expr : FALSE .  (7)
+
+	.  reduce 7
+
+
+state 12
+	expr : IF . expr THEN expr ELSE expr  (27)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 30
+
+
+state 13
+	expr : LET . decllist IN expr END  (34)
+
+	IDENT  shift 31
+	LPAREN  shift 32
+	.  error
+
+	decllist  goto 33
+	arg  goto 34
+	args_let  goto 35
+	decl  goto 36
+
+
+state 14
+	expr : INL . texpr expr  (30)
+
+	LPAREN  shift 37
+	BOOL  shift 38
+	INTTYPE  shift 39
+	UNITTYPE  shift 40
+	.  error
+
+	texpr  goto 41
+
+
+state 15
+	expr : INR . texpr expr  (31)
+
+	LPAREN  shift 37
+	BOOL  shift 38
+	INTTYPE  shift 39
+	UNITTYPE  shift 40
+	.  error
+
+	texpr  goto 42
+
+
+state 16
+	expr : FST . expr  (28)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 43
+
+
+state 17
+	expr : SND . expr  (29)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 44
+
+
+state 18
+	expr : FUN . LPAREN args_fun RPAREN ARROW expr  (32)
+
+	LPAREN  shift 45
+	.  error
+
+
+state 19
+	expr : CASE . expr OF INL LPAREN args_fun RPAREN ARROW expr BAR INR LPAREN args_fun RPAREN ARROW expr  (33)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 46
+
+
+state 20
+	simple_expr : REF . simple_expr  (12)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	REF  shift 20
+	BANG  shift 21
+	.  error
+
+	simple_expr  goto 47
+
+
+state 21
+	simple_expr : BANG . simple_expr  (11)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	REF  shift 20
+	BANG  shift 21
+	.  error
+
+	simple_expr  goto 48
+
+
+state 22
+	expr : WHILE . expr DO simple_expr  (26)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 49
+
+
+state 23
+	%entry% : '\001' start .  (54)
+
+	.  reduce 54
+
+
+state 24
+	simple_expr : simple_expr . simple_expr  (13)
+	expr : simple_expr .  (14)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	REF  shift 20
+	BANG  shift 21
+	EOF  reduce 14
+	RPAREN  reduce 14
+	COMMA  reduce 14
+	SEMICOLON  reduce 14
+	ADD  reduce 14
+	SUB  reduce 14
+	MUL  reduce 14
+	DIV  reduce 14
+	MOD  reduce 14
+	EQUAL  reduce 14
+	LT  reduce 14
+	ANDOP  reduce 14
+	OROP  reduce 14
+	THEN  reduce 14
+	ELSE  reduce 14
+	IN  reduce 14
+	END  reduce 14
+	BAR  reduce 14
+	OF  reduce 14
+	ASSIGN  reduce 14
+	DO  reduce 14
+
+	simple_expr  goto 50
+
+
+state 25
+	start : expr . EOF  (1)
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	EOF  shift 51
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	.  error
+
+
+state 26
+	simple_expr : LPAREN expr . COMMA expr RPAREN  (9)
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	exprlist : expr .  (44)
+	exprlist : expr . SEMICOLON exprlist  (45)
+
+	COMMA  shift 62
+	SEMICOLON  shift 63
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	RPAREN  reduce 44
+
+
+state 27
+	simple_expr : LPAREN exprlist . RPAREN  (8)
+
+	RPAREN  shift 64
+	.  error
+
+
+state 28
+	expr : SUB expr .  (15)
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	.  reduce 15
+
+
+state 29
+	simple_expr : NOT simple_expr .  (10)
+	simple_expr : simple_expr . simple_expr  (13)
+
+	.  reduce 10
+
+	simple_expr  goto 50
+
+
+state 30
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : IF expr . THEN expr ELSE expr  (27)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	THEN  shift 65
+	ASSIGN  shift 61
+	.  error
+
+
+state 31
+	arg : IDENT . COLON texpr  (35)
+	decl : IDENT . LPAREN args_fun RPAREN COLON texpr EQUAL expr  (41)
+
+	LPAREN  shift 66
+	COLON  shift 67
+	.  error
+
+
+state 32
+	args_let : LPAREN . args_let COMMA args_let RPAREN  (37)
+
+	IDENT  shift 68
+	LPAREN  shift 32
+	.  error
+
+	arg  goto 34
+	args_let  goto 69
+
+
+state 33
+	expr : LET decllist . IN expr END  (34)
+
+	IN  shift 70
+	.  error
+
+
+state 34
+	args_let : arg .  (36)
+
+	.  reduce 36
+
+
+state 35
+	decl : args_let . EQUAL expr  (40)
+
+	EQUAL  shift 71
+	.  error
+
+
+state 36
+	decllist : decl .  (42)
+	decllist : decl . SEMICOLON decllist  (43)
+
+	SEMICOLON  shift 72
+	IN  reduce 42
+
+
+state 37
+	texpr : LPAREN . texpr RPAREN  (53)
+
+	LPAREN  shift 37
+	BOOL  shift 38
+	INTTYPE  shift 39
+	UNITTYPE  shift 40
+	.  error
+
+	texpr  goto 73
+
+
+state 38
+	texpr : BOOL .  (46)
+
+	.  reduce 46
+
+
+state 39
+	texpr : INTTYPE .  (47)
+
+	.  reduce 47
+
+
+state 40
+	texpr : UNITTYPE .  (48)
+
+	.  reduce 48
+
+
+state 41
+	expr : INL texpr . expr  (30)
+	texpr : texpr . ARROW texpr  (49)
+	texpr : texpr . MUL texpr  (50)
+	texpr : texpr . ADD texpr  (51)
+	texpr : texpr . REF  (52)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	ADD  shift 74
+	SUB  shift 6
+	MUL  shift 75
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	ARROW  shift 76
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 77
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 78
+
+
+state 42
+	expr : INR texpr . expr  (31)
+	texpr : texpr . ARROW texpr  (49)
+	texpr : texpr . MUL texpr  (50)
+	texpr : texpr . ADD texpr  (51)
+	texpr : texpr . REF  (52)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	ADD  shift 74
+	SUB  shift 6
+	MUL  shift 75
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	ARROW  shift 76
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 77
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 79
+
+
+state 43
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : FST expr .  (28)
+
+	.  reduce 28
+
+
+state 44
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : SND expr .  (29)
+
+	.  reduce 29
+
+
+state 45
+	expr : FUN LPAREN . args_fun RPAREN ARROW expr  (32)
+
+	IDENT  shift 68
+	LPAREN  shift 32
+	.  error
+
+	args_fun  goto 80
+	arg  goto 81
+	args_let  goto 82
+
+
+state 46
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : CASE expr . OF INL LPAREN args_fun RPAREN ARROW expr BAR INR LPAREN args_fun RPAREN ARROW expr  (33)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	OF  shift 83
+	ASSIGN  shift 61
+	.  error
+
+
+state 47
+	simple_expr : REF simple_expr .  (12)
+	simple_expr : simple_expr . simple_expr  (13)
+
+	.  reduce 12
+
+	simple_expr  goto 50
+
+
+state 48
+	simple_expr : BANG simple_expr .  (11)
+	simple_expr : simple_expr . simple_expr  (13)
+
+	.  reduce 11
+
+	simple_expr  goto 50
+
+
+state 49
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : WHILE expr . DO simple_expr  (26)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	DO  shift 84
+	.  error
+
+
+state 50
+	simple_expr : simple_expr . simple_expr  (13)
+	simple_expr : simple_expr simple_expr .  (13)
+
+	.  reduce 13
+
+	simple_expr  goto 50
+
+
+state 51
+	start : expr EOF .  (1)
+
+	.  reduce 1
+
+
+state 52
+	expr : expr ADD . expr  (16)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 85
+
+
+state 53
+	expr : expr SUB . expr  (17)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 86
+
+
+state 54
+	expr : expr MUL . expr  (18)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 87
+
+
+state 55
+	expr : expr DIV . expr  (19)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 88
+
+
+state 56
+	expr : expr MOD . expr  (20)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 89
+
+
+state 57
+	expr : expr EQUAL . expr  (22)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 90
+
+
+state 58
+	expr : expr LT . expr  (21)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 91
+
+
+state 59
+	expr : expr ANDOP . expr  (23)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 92
+
+
+state 60
+	expr : expr OROP . expr  (24)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 93
+
+
+state 61
+	expr : expr ASSIGN . expr  (25)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 94
+
+
+state 62
+	simple_expr : LPAREN expr COMMA . expr RPAREN  (9)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 95
+
+
+state 63
+	exprlist : expr SEMICOLON . exprlist  (45)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 96
+	exprlist  goto 97
+
+
+state 64
+	simple_expr : LPAREN exprlist RPAREN .  (8)
+
+	.  reduce 8
+
+
+state 65
+	expr : IF expr THEN . expr ELSE expr  (27)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 98
+
+
+state 66
+	decl : IDENT LPAREN . args_fun RPAREN COLON texpr EQUAL expr  (41)
+
+	IDENT  shift 68
+	LPAREN  shift 32
+	.  error
+
+	args_fun  goto 99
+	arg  goto 81
+	args_let  goto 82
+
+
+state 67
+	arg : IDENT COLON . texpr  (35)
+
+	LPAREN  shift 37
+	BOOL  shift 38
+	INTTYPE  shift 39
+	UNITTYPE  shift 40
+	.  error
+
+	texpr  goto 100
+
+
+state 68
+	arg : IDENT . COLON texpr  (35)
+
+	COLON  shift 67
+	.  error
+
+
+state 69
+	args_let : LPAREN args_let . COMMA args_let RPAREN  (37)
+
+	COMMA  shift 101
+	.  error
+
+
+state 70
+	expr : LET decllist IN . expr END  (34)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 102
+
+
+state 71
+	decl : args_let EQUAL . expr  (40)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 103
+
+
+state 72
+	decllist : decl SEMICOLON . decllist  (43)
+
+	IDENT  shift 31
+	LPAREN  shift 32
+	.  error
+
+	decllist  goto 104
+	arg  goto 34
+	args_let  goto 35
+	decl  goto 36
+
+
+state 73
+	texpr : texpr . ARROW texpr  (49)
+	texpr : texpr . MUL texpr  (50)
+	texpr : texpr . ADD texpr  (51)
+	texpr : texpr . REF  (52)
+	texpr : LPAREN texpr . RPAREN  (53)
+
+	RPAREN  shift 105
+	ADD  shift 74
+	MUL  shift 75
+	ARROW  shift 76
+	REF  shift 106
+	.  error
+
+
+state 74
+	texpr : texpr ADD . texpr  (51)
+
+	LPAREN  shift 37
+	BOOL  shift 38
+	INTTYPE  shift 39
+	UNITTYPE  shift 40
+	.  error
+
+	texpr  goto 107
+
+
+state 75
+	texpr : texpr MUL . texpr  (50)
+
+	LPAREN  shift 37
+	BOOL  shift 38
+	INTTYPE  shift 39
+	UNITTYPE  shift 40
+	.  error
+
+	texpr  goto 108
+
+
+state 76
+	texpr : texpr ARROW . texpr  (49)
+
+	LPAREN  shift 37
+	BOOL  shift 38
+	INTTYPE  shift 39
+	UNITTYPE  shift 40
+	.  error
+
+	texpr  goto 109
+
+
+state 77
+	simple_expr : REF . simple_expr  (12)
+	texpr : texpr REF .  (52)
+
+	.  reduce 52
+
+	simple_expr  goto 47
+
+
+state 78
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : INL texpr expr .  (30)
+
+	.  reduce 30
+
+
+state 79
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : INR texpr expr .  (31)
+
+	.  reduce 31
+
+
+state 80
+	expr : FUN LPAREN args_fun . RPAREN ARROW expr  (32)
+
+	RPAREN  shift 110
+	.  error
+
+
+state 81
+	args_let : arg .  (36)
+	args_fun : arg .  (38)
+
+	RPAREN  reduce 38
+	COMMA  reduce 36
+
+
+state 82
+	args_fun : args_let . COMMA args_let  (39)
+
+	COMMA  shift 111
+	.  error
+
+
+state 83
+	expr : CASE expr OF . INL LPAREN args_fun RPAREN ARROW expr BAR INR LPAREN args_fun RPAREN ARROW expr  (33)
+
+	INL  shift 112
+	.  error
+
+
+state 84
+	expr : WHILE expr DO . simple_expr  (26)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	REF  shift 20
+	BANG  shift 21
+	.  error
+
+	simple_expr  goto 113
+
+
+state 85
+	expr : expr . ADD expr  (16)
+	expr : expr ADD expr .  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	EOF  reduce 16
+	RPAREN  reduce 16
+	COMMA  reduce 16
+	SEMICOLON  reduce 16
+	ADD  reduce 16
+	SUB  reduce 16
+	THEN  reduce 16
+	ELSE  reduce 16
+	IN  reduce 16
+	END  reduce 16
+	BAR  reduce 16
+	OF  reduce 16
+	DO  reduce 16
+
+
+state 86
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr SUB expr .  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	EOF  reduce 17
+	RPAREN  reduce 17
+	COMMA  reduce 17
+	SEMICOLON  reduce 17
+	ADD  reduce 17
+	SUB  reduce 17
+	THEN  reduce 17
+	ELSE  reduce 17
+	IN  reduce 17
+	END  reduce 17
+	BAR  reduce 17
+	OF  reduce 17
+	DO  reduce 17
+
+
+state 87
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr MUL expr .  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	ASSIGN  shift 61
+	EOF  reduce 18
+	RPAREN  reduce 18
+	COMMA  reduce 18
+	SEMICOLON  reduce 18
+	ADD  reduce 18
+	SUB  reduce 18
+	MUL  reduce 18
+	DIV  reduce 18
+	MOD  reduce 18
+	EQUAL  reduce 18
+	LT  reduce 18
+	ANDOP  reduce 18
+	OROP  reduce 18
+	THEN  reduce 18
+	ELSE  reduce 18
+	IN  reduce 18
+	END  reduce 18
+	BAR  reduce 18
+	OF  reduce 18
+	DO  reduce 18
+
+
+state 88
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr DIV expr .  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	ASSIGN  shift 61
+	EOF  reduce 19
+	RPAREN  reduce 19
+	COMMA  reduce 19
+	SEMICOLON  reduce 19
+	ADD  reduce 19
+	SUB  reduce 19
+	MUL  reduce 19
+	DIV  reduce 19
+	MOD  reduce 19
+	EQUAL  reduce 19
+	LT  reduce 19
+	ANDOP  reduce 19
+	OROP  reduce 19
+	THEN  reduce 19
+	ELSE  reduce 19
+	IN  reduce 19
+	END  reduce 19
+	BAR  reduce 19
+	OF  reduce 19
+	DO  reduce 19
+
+
+state 89
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr MOD expr .  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	ASSIGN  shift 61
+	EOF  reduce 20
+	RPAREN  reduce 20
+	COMMA  reduce 20
+	SEMICOLON  reduce 20
+	ADD  reduce 20
+	SUB  reduce 20
+	MUL  reduce 20
+	DIV  reduce 20
+	MOD  reduce 20
+	EQUAL  reduce 20
+	LT  reduce 20
+	ANDOP  reduce 20
+	OROP  reduce 20
+	THEN  reduce 20
+	ELSE  reduce 20
+	IN  reduce 20
+	END  reduce 20
+	BAR  reduce 20
+	OF  reduce 20
+	DO  reduce 20
+
+
+state 90
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr EQUAL expr .  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	ASSIGN  shift 61
+	EOF  reduce 22
+	RPAREN  reduce 22
+	COMMA  reduce 22
+	SEMICOLON  reduce 22
+	ADD  reduce 22
+	SUB  reduce 22
+	MUL  reduce 22
+	DIV  reduce 22
+	MOD  reduce 22
+	EQUAL  reduce 22
+	LT  reduce 22
+	ANDOP  reduce 22
+	OROP  reduce 22
+	THEN  reduce 22
+	ELSE  reduce 22
+	IN  reduce 22
+	END  reduce 22
+	BAR  reduce 22
+	OF  reduce 22
+	DO  reduce 22
+
+
+state 91
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr LT expr .  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	ASSIGN  shift 61
+	EOF  reduce 21
+	RPAREN  reduce 21
+	COMMA  reduce 21
+	SEMICOLON  reduce 21
+	ADD  reduce 21
+	SUB  reduce 21
+	MUL  reduce 21
+	DIV  reduce 21
+	MOD  reduce 21
+	EQUAL  reduce 21
+	LT  reduce 21
+	ANDOP  reduce 21
+	OROP  reduce 21
+	THEN  reduce 21
+	ELSE  reduce 21
+	IN  reduce 21
+	END  reduce 21
+	BAR  reduce 21
+	OF  reduce 21
+	DO  reduce 21
+
+
+state 92
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr ANDOP expr .  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	ASSIGN  shift 61
+	EOF  reduce 23
+	RPAREN  reduce 23
+	COMMA  reduce 23
+	SEMICOLON  reduce 23
+	ADD  reduce 23
+	SUB  reduce 23
+	MUL  reduce 23
+	DIV  reduce 23
+	MOD  reduce 23
+	EQUAL  reduce 23
+	LT  reduce 23
+	ANDOP  reduce 23
+	OROP  reduce 23
+	THEN  reduce 23
+	ELSE  reduce 23
+	IN  reduce 23
+	END  reduce 23
+	BAR  reduce 23
+	OF  reduce 23
+	DO  reduce 23
+
+
+state 93
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr OROP expr .  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	ASSIGN  shift 61
+	EOF  reduce 24
+	RPAREN  reduce 24
+	COMMA  reduce 24
+	SEMICOLON  reduce 24
+	ADD  reduce 24
+	SUB  reduce 24
+	MUL  reduce 24
+	DIV  reduce 24
+	MOD  reduce 24
+	EQUAL  reduce 24
+	LT  reduce 24
+	ANDOP  reduce 24
+	OROP  reduce 24
+	THEN  reduce 24
+	ELSE  reduce 24
+	IN  reduce 24
+	END  reduce 24
+	BAR  reduce 24
+	OF  reduce 24
+	DO  reduce 24
+
+
+state 94
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : expr ASSIGN expr .  (25)
+
+	.  reduce 25
+
+
+state 95
+	simple_expr : LPAREN expr COMMA expr . RPAREN  (9)
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+
+	RPAREN  shift 114
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	.  error
+
+
+state 96
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	exprlist : expr .  (44)
+	exprlist : expr . SEMICOLON exprlist  (45)
+
+	SEMICOLON  shift 63
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	RPAREN  reduce 44
+
+
+state 97
+	exprlist : expr SEMICOLON exprlist .  (45)
+
+	.  reduce 45
+
+
+state 98
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : IF expr THEN expr . ELSE expr  (27)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ELSE  shift 115
+	ASSIGN  shift 61
+	.  error
+
+
+state 99
+	decl : IDENT LPAREN args_fun . RPAREN COLON texpr EQUAL expr  (41)
+
+	RPAREN  shift 116
+	.  error
+
+
+state 100
+	arg : IDENT COLON texpr .  (35)
+	texpr : texpr . ARROW texpr  (49)
+	texpr : texpr . MUL texpr  (50)
+	texpr : texpr . ADD texpr  (51)
+	texpr : texpr . REF  (52)
+
+	ADD  shift 74
+	MUL  shift 75
+	ARROW  shift 76
+	REF  shift 106
+	RPAREN  reduce 35
+	COMMA  reduce 35
+	EQUAL  reduce 35
+
+
+state 101
+	args_let : LPAREN args_let COMMA . args_let RPAREN  (37)
+
+	IDENT  shift 68
+	LPAREN  shift 32
+	.  error
+
+	arg  goto 34
+	args_let  goto 117
+
+
+state 102
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : LET decllist IN expr . END  (34)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	END  shift 118
+	ASSIGN  shift 61
+	.  error
+
+
+state 103
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	decl : args_let EQUAL expr .  (40)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	SEMICOLON  reduce 40
+	IN  reduce 40
+
+
+state 104
+	decllist : decl SEMICOLON decllist .  (43)
+
+	.  reduce 43
+
+
+state 105
+	texpr : LPAREN texpr RPAREN .  (53)
+
+	.  reduce 53
+
+
+state 106
+	texpr : texpr REF .  (52)
+
+	.  reduce 52
+
+
+state 107
+	texpr : texpr . ARROW texpr  (49)
+	texpr : texpr . MUL texpr  (50)
+	texpr : texpr . ADD texpr  (51)
+	texpr : texpr ADD texpr .  (51)
+	texpr : texpr . REF  (52)
+
+	MUL  shift 75
+	ARROW  shift 76
+	REF  shift 106
+	INT  reduce 51
+	IDENT  reduce 51
+	LPAREN  reduce 51
+	RPAREN  reduce 51
+	COMMA  reduce 51
+	ADD  reduce 51
+	SUB  reduce 51
+	NOT  reduce 51
+	EQUAL  reduce 51
+	WHAT  reduce 51
+	UNIT  reduce 51
+	TRUE  reduce 51
+	FALSE  reduce 51
+	IF  reduce 51
+	LET  reduce 51
+	INL  reduce 51
+	INR  reduce 51
+	FST  reduce 51
+	SND  reduce 51
+	FUN  reduce 51
+	CASE  reduce 51
+	BANG  reduce 51
+	WHILE  reduce 51
+
+
+state 108
+	texpr : texpr . ARROW texpr  (49)
+	texpr : texpr . MUL texpr  (50)
+	texpr : texpr MUL texpr .  (50)
+	texpr : texpr . ADD texpr  (51)
+	texpr : texpr . REF  (52)
+
+	REF  shift 106
+	INT  reduce 50
+	IDENT  reduce 50
+	LPAREN  reduce 50
+	RPAREN  reduce 50
+	COMMA  reduce 50
+	ADD  reduce 50
+	SUB  reduce 50
+	MUL  reduce 50
+	NOT  reduce 50
+	EQUAL  reduce 50
+	WHAT  reduce 50
+	UNIT  reduce 50
+	TRUE  reduce 50
+	FALSE  reduce 50
+	IF  reduce 50
+	LET  reduce 50
+	ARROW  reduce 50
+	INL  reduce 50
+	INR  reduce 50
+	FST  reduce 50
+	SND  reduce 50
+	FUN  reduce 50
+	CASE  reduce 50
+	BANG  reduce 50
+	WHILE  reduce 50
+
+
+state 109
+	texpr : texpr . ARROW texpr  (49)
+	texpr : texpr ARROW texpr .  (49)
+	texpr : texpr . MUL texpr  (50)
+	texpr : texpr . ADD texpr  (51)
+	texpr : texpr . REF  (52)
+
+	REF  shift 106
+	INT  reduce 49
+	IDENT  reduce 49
+	LPAREN  reduce 49
+	RPAREN  reduce 49
+	COMMA  reduce 49
+	ADD  reduce 49
+	SUB  reduce 49
+	MUL  reduce 49
+	NOT  reduce 49
+	EQUAL  reduce 49
+	WHAT  reduce 49
+	UNIT  reduce 49
+	TRUE  reduce 49
+	FALSE  reduce 49
+	IF  reduce 49
+	LET  reduce 49
+	ARROW  reduce 49
+	INL  reduce 49
+	INR  reduce 49
+	FST  reduce 49
+	SND  reduce 49
+	FUN  reduce 49
+	CASE  reduce 49
+	BANG  reduce 49
+	WHILE  reduce 49
+
+
+state 110
+	expr : FUN LPAREN args_fun RPAREN . ARROW expr  (32)
+
+	ARROW  shift 119
+	.  error
+
+
+state 111
+	args_fun : args_let COMMA . args_let  (39)
+
+	IDENT  shift 68
+	LPAREN  shift 32
+	.  error
+
+	arg  goto 34
+	args_let  goto 120
+
+
+state 112
+	expr : CASE expr OF INL . LPAREN args_fun RPAREN ARROW expr BAR INR LPAREN args_fun RPAREN ARROW expr  (33)
+
+	LPAREN  shift 121
+	.  error
+
+
+state 113
+	simple_expr : simple_expr . simple_expr  (13)
+	expr : WHILE expr DO simple_expr .  (26)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	REF  shift 20
+	BANG  shift 21
+	EOF  reduce 26
+	RPAREN  reduce 26
+	COMMA  reduce 26
+	SEMICOLON  reduce 26
+	ADD  reduce 26
+	SUB  reduce 26
+	MUL  reduce 26
+	DIV  reduce 26
+	MOD  reduce 26
+	EQUAL  reduce 26
+	LT  reduce 26
+	ANDOP  reduce 26
+	OROP  reduce 26
+	THEN  reduce 26
+	ELSE  reduce 26
+	IN  reduce 26
+	END  reduce 26
+	BAR  reduce 26
+	OF  reduce 26
+	ASSIGN  reduce 26
+	DO  reduce 26
+
+	simple_expr  goto 50
+
+
+state 114
+	simple_expr : LPAREN expr COMMA expr RPAREN .  (9)
+
+	.  reduce 9
+
+
+state 115
+	expr : IF expr THEN expr ELSE . expr  (27)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 122
+
+
+state 116
+	decl : IDENT LPAREN args_fun RPAREN . COLON texpr EQUAL expr  (41)
+
+	COLON  shift 123
+	.  error
+
+
+state 117
+	args_let : LPAREN args_let COMMA args_let . RPAREN  (37)
+
+	RPAREN  shift 124
+	.  error
+
+
+state 118
+	expr : LET decllist IN expr END .  (34)
+
+	.  reduce 34
+
+
+state 119
+	expr : FUN LPAREN args_fun RPAREN ARROW . expr  (32)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 125
+
+
+state 120
+	args_fun : args_let COMMA args_let .  (39)
+
+	.  reduce 39
+
+
+state 121
+	expr : CASE expr OF INL LPAREN . args_fun RPAREN ARROW expr BAR INR LPAREN args_fun RPAREN ARROW expr  (33)
+
+	IDENT  shift 68
+	LPAREN  shift 32
+	.  error
+
+	args_fun  goto 126
+	arg  goto 81
+	args_let  goto 82
+
+
+state 122
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : IF expr THEN expr ELSE expr .  (27)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	EOF  reduce 27
+	RPAREN  reduce 27
+	COMMA  reduce 27
+	SEMICOLON  reduce 27
+	THEN  reduce 27
+	ELSE  reduce 27
+	IN  reduce 27
+	END  reduce 27
+	BAR  reduce 27
+	OF  reduce 27
+	DO  reduce 27
+
+
+state 123
+	decl : IDENT LPAREN args_fun RPAREN COLON . texpr EQUAL expr  (41)
+
+	LPAREN  shift 37
+	BOOL  shift 38
+	INTTYPE  shift 39
+	UNITTYPE  shift 40
+	.  error
+
+	texpr  goto 127
+
+
+state 124
+	args_let : LPAREN args_let COMMA args_let RPAREN .  (37)
+
+	.  reduce 37
+
+
+state 125
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : FUN LPAREN args_fun RPAREN ARROW expr .  (32)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	EOF  reduce 32
+	RPAREN  reduce 32
+	COMMA  reduce 32
+	SEMICOLON  reduce 32
+	THEN  reduce 32
+	ELSE  reduce 32
+	IN  reduce 32
+	END  reduce 32
+	BAR  reduce 32
+	OF  reduce 32
+	DO  reduce 32
+
+
+state 126
+	expr : CASE expr OF INL LPAREN args_fun . RPAREN ARROW expr BAR INR LPAREN args_fun RPAREN ARROW expr  (33)
+
+	RPAREN  shift 128
+	.  error
+
+
+state 127
+	decl : IDENT LPAREN args_fun RPAREN COLON texpr . EQUAL expr  (41)
+	texpr : texpr . ARROW texpr  (49)
+	texpr : texpr . MUL texpr  (50)
+	texpr : texpr . ADD texpr  (51)
+	texpr : texpr . REF  (52)
+
+	ADD  shift 74
+	MUL  shift 75
+	EQUAL  shift 129
+	ARROW  shift 76
+	REF  shift 106
+	.  error
+
+
+state 128
+	expr : CASE expr OF INL LPAREN args_fun RPAREN . ARROW expr BAR INR LPAREN args_fun RPAREN ARROW expr  (33)
+
+	ARROW  shift 130
+	.  error
+
+
+state 129
+	decl : IDENT LPAREN args_fun RPAREN COLON texpr EQUAL . expr  (41)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 131
+
+
+state 130
+	expr : CASE expr OF INL LPAREN args_fun RPAREN ARROW . expr BAR INR LPAREN args_fun RPAREN ARROW expr  (33)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 132
+
+
+state 131
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	decl : IDENT LPAREN args_fun RPAREN COLON texpr EQUAL expr .  (41)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	SEMICOLON  reduce 41
+	IN  reduce 41
+
+
+state 132
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : CASE expr OF INL LPAREN args_fun RPAREN ARROW expr . BAR INR LPAREN args_fun RPAREN ARROW expr  (33)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	BAR  shift 133
+	ASSIGN  shift 61
+	.  error
+
+
+state 133
+	expr : CASE expr OF INL LPAREN args_fun RPAREN ARROW expr BAR . INR LPAREN args_fun RPAREN ARROW expr  (33)
+
+	INR  shift 134
+	.  error
+
+
+state 134
+	expr : CASE expr OF INL LPAREN args_fun RPAREN ARROW expr BAR INR . LPAREN args_fun RPAREN ARROW expr  (33)
+
+	LPAREN  shift 135
+	.  error
+
+
+state 135
+	expr : CASE expr OF INL LPAREN args_fun RPAREN ARROW expr BAR INR LPAREN . args_fun RPAREN ARROW expr  (33)
+
+	IDENT  shift 68
+	LPAREN  shift 32
+	.  error
+
+	args_fun  goto 136
+	arg  goto 81
+	args_let  goto 82
+
+
+state 136
+	expr : CASE expr OF INL LPAREN args_fun RPAREN ARROW expr BAR INR LPAREN args_fun . RPAREN ARROW expr  (33)
+
+	RPAREN  shift 137
+	.  error
+
+
+state 137
+	expr : CASE expr OF INL LPAREN args_fun RPAREN ARROW expr BAR INR LPAREN args_fun RPAREN . ARROW expr  (33)
+
+	ARROW  shift 138
+	.  error
+
+
+state 138
+	expr : CASE expr OF INL LPAREN args_fun RPAREN ARROW expr BAR INR LPAREN args_fun RPAREN ARROW . expr  (33)
+
+	INT  shift 3
+	IDENT  shift 4
+	LPAREN  shift 5
+	SUB  shift 6
+	NOT  shift 7
+	WHAT  shift 8
+	UNIT  shift 9
+	TRUE  shift 10
+	FALSE  shift 11
+	IF  shift 12
+	LET  shift 13
+	INL  shift 14
+	INR  shift 15
+	FST  shift 16
+	SND  shift 17
+	FUN  shift 18
+	CASE  shift 19
+	REF  shift 20
+	BANG  shift 21
+	WHILE  shift 22
+	.  error
+
+	simple_expr  goto 24
+	expr  goto 139
+
+
+state 139
+	expr : expr . ADD expr  (16)
+	expr : expr . SUB expr  (17)
+	expr : expr . MUL expr  (18)
+	expr : expr . DIV expr  (19)
+	expr : expr . MOD expr  (20)
+	expr : expr . LT expr  (21)
+	expr : expr . EQUAL expr  (22)
+	expr : expr . ANDOP expr  (23)
+	expr : expr . OROP expr  (24)
+	expr : expr . ASSIGN expr  (25)
+	expr : CASE expr OF INL LPAREN args_fun RPAREN ARROW expr BAR INR LPAREN args_fun RPAREN ARROW expr .  (33)
+
+	ADD  shift 52
+	SUB  shift 53
+	MUL  shift 54
+	DIV  shift 55
+	MOD  shift 56
+	EQUAL  shift 57
+	LT  shift 58
+	ANDOP  shift 59
+	OROP  shift 60
+	ASSIGN  shift 61
+	EOF  reduce 33
+	RPAREN  reduce 33
+	COMMA  reduce 33
+	SEMICOLON  reduce 33
+	THEN  reduce 33
+	ELSE  reduce 33
+	IN  reduce 33
+	END  reduce 33
+	BAR  reduce 33
+	OF  reduce 33
+	DO  reduce 33
+
+
+56 terminals, 12 nonterminals
+55 grammar rules, 140 states
