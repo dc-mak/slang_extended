@@ -5,13 +5,13 @@ I messed around with the compiler to implement the following features:
 -	line comments (thank you Emma Holliday the help)
 -	integer division `/`
 -	integer modulo `%`
--	high precedence, left associative unambiguos function application
+-	high precedence, left associative unambiguous function application
 	- allows `if ... then ... else <fun> <args>` without `end`
 -	removed `end` for `if-else` expressions
 -	short-circuit evaluation for `&&` and `||`
--	removed `end` from lamda-expressions
+-	removed `end` from lambda-expressions
 -	removed `end` from case-expression
--	added declaration lists (as a derived form, allowing me to remove a bunch of `let`s and `end`s) 
+-	added declaration lists (as a derived form, allowing me to remove a bunch of `let`s and `end`s)
 -	added pattern-matching for product types
 -	added rudimentary type inference (thank you James Clarke for helping out)
 -	hence removed type annotations (exception for `inl` and `inr` where it is necessary)
@@ -25,4 +25,4 @@ like it would be worth a shot at some point.
 
 ## static.ml
 This complete rewrite, at its essence, passes a reference to an expected type down
-(a synthesised attribute) which is unified/constrained depending on the expresssion being typed.
+(a synthesised attribute) which is unified/constrained depending on the expression being typed.
