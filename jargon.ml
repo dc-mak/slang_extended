@@ -59,7 +59,7 @@ type instruction =
   | ASSIGN 
   | SWAP
   | POP 
-(*  | BIND of var            not needed *) 
+(*| BIND of var            not needed *) 
   | FST
   | SND
   | DEREF 
@@ -501,7 +501,7 @@ let step vm =
   | LABEL l           -> advance_cp vm 
   | DEREF             -> advance_cp (deref vm)
   | MK_REF            -> advance_cp (mk_ref vm)
-  | ASSIGN            -> advance_cp(assign vm) 
+  | ASSIGN            -> advance_cp (assign vm) 
   | HALT              -> { vm with status = Halted } 
   | GOTO (_, Some i)  -> goto(i, vm) 
   | TEST (_, Some i)  -> test(i, vm) 
@@ -696,16 +696,28 @@ let rec comp vmap = function
                       let (defs2, c2) = comp_lambda vmap (Some f, x, e1) in 
                           (defs1 @ defs2, c2 @ c1 @ [APPLY]) 
 
+(* Compiling a closure: *)
 and comp_lambda vmap (f_opt, x, e) = 
+    (* If f is recursive, then it must be included in the bindings when compiling e.
+     * Argument x is included by default. 
+     * When on a stack you have [APPLY, f, x] then f is at SP-1 and x is at SP-2. *)
     let bound_vars = match f_opt with | None -> [x]          | Some f -> [x; f] in 
     let f =          match f_opt with | None -> new_label () | Some f -> f in 
     let f_bind =     match f_opt with | None -> []           | Some f -> [(f, STACK_LOCATION (-1))]  in 
     let x_bind = (x, STACK_LOCATION (-2)) in 
+
+    (* For each free variable, we need to add a lookup and push instruction. 
+     * Each free variable also needs a heap-lookup index, in order to get the variable's
+     * value during the execution of the closure.
+     * We also need to know the number of free variables, but in a more low-level
+     * compiler, these would be just a component in calculating the total SIZE of the closure. *)
     let fvars = Free_vars.free_vars (bound_vars, e)   in 
     let fetch_fvars = List.map (fun y -> LOOKUP(find vmap y)) fvars in 
     let fvar_bind (y, p) = (y, HEAP_LOCATION p) in 
     let env_bind = List.map fvar_bind (positions fvars) in 
     let new_vmap = x_bind :: (f_bind @ env_bind @ vmap) in 
+
+    (* We recursively compile the rest/body with the new environment/bindings. *)
     let (defs, c) = comp new_vmap e in  
     let def = [LABEL f] @ c @ [RETURN] in 
      (def @ defs, (List.rev fetch_fvars) @ [MK_CLOSURE((f, None), List.length fvars)])

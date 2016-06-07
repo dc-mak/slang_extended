@@ -43,7 +43,7 @@ let new_ref a =
     end
 
 let lookup x =
-    try
+   try
         let n, _ = List.find (fun (n,y) -> x == y) !ref_index in
         n
    with Not_found -> 0
@@ -333,7 +333,7 @@ let unequal env loc set1 set2 =
     let t1_str  = pp_set "unequal" set1 in
     let t2_str  = pp_set "unequal" set2 in
     let _       = show_types()          in
-    let _       = print_list no_loc env in
+    let _       = print_list no_loc env insdf
     complain ("\nERROR near location " ^ loc_str
                 ^ "\nExpecting type " ^ t1_str
                 ^ " to be equal to type" ^ t2_str)
@@ -591,7 +591,7 @@ let rec infer (env, expect, e) =
             let tx, tb     = mk_none(), mk_none()                in
             let tf         = mk_arr tx tb                        in
 
-            let (e,env)    = infer ((f,tf) :: env, expect, e)      in
+            let (e,env)    = infer ((f,tf) :: env, expect, e)    in
             let (b,env)    = infer ((x,tx) :: env, tb, body)     in
             let (body,env) = save_var loc (save_var loc (b,env)) in
 
