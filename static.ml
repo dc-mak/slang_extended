@@ -333,7 +333,7 @@ let unequal env loc set1 set2 =
     let t1_str  = pp_set "unequal" set1 in
     let t2_str  = pp_set "unequal" set2 in
     let _       = show_types()          in
-    let _       = print_list no_loc env insdf
+    let _       = print_list no_loc env in
     complain ("\nERROR near location " ^ loc_str
                 ^ "\nExpecting type " ^ t1_str
                 ^ " to be equal to type" ^ t2_str)
